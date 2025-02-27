@@ -3,20 +3,6 @@ import requests
 import json
 from typing import Optional, List, Dict
 
-# Добавляем список работодателей с их ID
-employer_ids = [
-    80,      # Альфа-Банк
-    1740,    # Яндекс
-    2180,    # Ozon
-    2748,    # Ростелеком
-    3529,    # Сбер
-    3776,    # МТС
-    4233,    # X5 Group
-    15478,   # VK (Mail.ru)
-    39305,   # Газпром нефть
-    78638,   # Тинькофф (Т-банк)
-]
-
 class HHApi:
 
     """
@@ -71,12 +57,3 @@ class HHApi:
         except json.JSONDecodeError as e:
             print(f"Ошибка при разборе JSON вакансий для работодателя {employer_id}: {e}")
             return None
-
-# Создаем экземпляр класса HHApi
-hh_api = HHApi()
-
-# Вызываем метод get_employer_info на экземпляре класса
-empl = hh_api.get_employer_vacancies(employer_ids[4])
-
-# Выводим результат
-print(empl)
