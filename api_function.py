@@ -4,28 +4,23 @@ import json
 from typing import Optional, List, Dict
 
 class HHApi:
-
     """
     Класс для взаимодействия с API HH.ru.
     """
-
     def __init__(self):
-
         """
         Инициализируем экземпляр класса.
         Устанавливает базовый URL API.
         """
-
         self.base_url = "https://api.hh.ru"
 
     def get_employer_vacancies(self, employer_id: int, limit: int = 100, page: int = 0) -> Optional[List[Dict]]:
-
         """
         Получает список вакансий работодателя по ID.
         """
         vacancies: List[Dict] = []  # инициализируем пустой список для хранения вакансий
+        url = f"{self.base_url}/vacancies"  # формируем базовый URL для запроса вакансий
         try:
-            url = f"{self.base_url}/vacancies"  # формируем базовый URL для запроса вакансий
             params = {  # формируем словарь с параметрами запроса
                 "employer_id": employer_id,  # ID работодателя
                 "per_page": limit,  # количество вакансий на странице
@@ -48,8 +43,6 @@ class HHApi:
                         data_next = req_next.json()  # преобразуем JSON-ответ в словарь
                         vacancies.extend(data_next['items'])  # добавляем вакансии со следующей страницы в список
             return vacancies  # возвращаем список всех вакансий
-
-
         # обрабатываем ошибки связанные с HTTP-запросами и связанные с разбором JSON (возвращаем None в случае ошибки)
         except requests.exceptions.RequestException as e:
             print(f"Ошибка при получении вакансий работодателя {employer_id}: {e}")
