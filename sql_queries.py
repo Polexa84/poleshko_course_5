@@ -1,14 +1,10 @@
 # create_bd.py
 def check_db_exists(db_name: str):
-    """
-    Возвращает SQL-запрос для проверки существования базы данных с заданным именем.
-    """
+    """Возвращает SQL-запрос для проверки существования базы данных с заданным именем."""
     return f"SELECT 1 FROM pg_database WHERE datname='{db_name}'"
 
 def create_db(db_name: str):
-    """
-    Возвращает SQL-запрос для создания базы данных с заданным именем.
-    """
+    """Возвращает SQL-запрос для создания базы данных с заданным именем."""
     return f"CREATE DATABASE {db_name}"
 
 def create_employers_table():
@@ -43,9 +39,7 @@ def create_vacancies_table():
 
 # db_manager.py
 def get_companies_and_vacancies_count():
-    """
-    Возвращает SQL-запрос для получения списка компаний и количества вакансий у каждой компании.
-    """
+    """Возвращает SQL-запрос для получения списка компаний и количества вакансий у каждой компании."""
     return """
         SELECT employer_name, COUNT(vacancy_id) AS vacancies_count
         FROM employers
@@ -55,9 +49,7 @@ def get_companies_and_vacancies_count():
     """
 
 def get_all_vacancies():
-    """
-    Возвращает SQL-запрос для получения списка всех вакансий.
-    """
+    """Возвращает SQL-запрос для получения списка всех вакансий."""
     return """
         SELECT employer_name, vacancy_name, salary_from, salary_to, currency, vacancy_url
         FROM vacancies
@@ -65,9 +57,7 @@ def get_all_vacancies():
     """
 
 def get_avg_salary():
-    """
-    Возвращает SQL-запрос для получения средней зарплаты по вакансиям.
-    """
+    """Возвращает SQL-запрос для получения средней зарплаты по вакансиям."""
     return """
         SELECT AVG(salary_from)
         FROM vacancies
@@ -75,9 +65,7 @@ def get_avg_salary():
     """
 
 def get_vacancies_with_higher_salary():
-    """
-    Возвращает SQL-запрос для получения списка вакансий с зарплатой выше средней.
-    """
+    """Возвращает SQL-запрос для получения списка вакансий с зарплатой выше средней."""
     return """
         SELECT employer_name, vacancy_name, salary_from, salary_to, currency, vacancy_url
         FROM vacancies
