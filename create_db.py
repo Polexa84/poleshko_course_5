@@ -17,6 +17,13 @@ class DatabaseCreator:
         # Создаем копию параметров, чтобы не изменять исходные
         self.params: Dict[str, str] = params.copy()
 
+    def _close(self):
+        """Закрывает соединение и курсор, если они были открыты."""
+        if self.cur:
+            self.cur.close()
+        if self.conn:
+            self.conn.close()
+
     def create_database(self) -> None:
         """Создает базу данных, если она не существует."""
         try:
@@ -38,9 +45,7 @@ class DatabaseCreator:
         except psycopg2.Error as e:
             print(f"Ошибка при создании базы данных: {e}")
         finally:
-            if self.conn:
-                self.cur.close()
-                self.conn.close()
+            self._close()
 
     def create_tables(self) -> None:
         """Создает таблицы employers и vacancies."""
@@ -61,6 +66,4 @@ class DatabaseCreator:
         except psycopg2.Error as e:
             print(f"Ошибка при создании таблиц: {e}")
         finally:
-            if self.conn:
-                self.cur.close()
-                self.conn.close()
+            self._close()
