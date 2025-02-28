@@ -1,5 +1,12 @@
 import psycopg2
 from typing import List, Dict, Optional
+from sql_queries import (
+    get_companies_and_vacancies_count,
+    get_all_vacancies,
+    get_avg_salary,
+    get_vacancies_with_higher_salary,
+    get_vacancies_with_keyword
+)
 
 class DBManager:
     """
@@ -20,18 +27,11 @@ class DBManager:
         Получает список всех компаний и количество вакансий у каждой компании.
         """
         conn = None
-        cur = None
         try:
             conn = psycopg2.connect(dbname=self.db_name, **self.params)
             cur = conn.cursor()
 
-            cur.execute("""
-                SELECT e.employer_name, COUNT(v.vacancy_id) AS vacancies_count
-                FROM employers e
-                LEFT JOIN vacancies v ON e.employer_id = v.employer_id
-                GROUP BY e.employer_name
-                ORDER BY vacancies_count DESC
-            """)
+            cur.execute(get_companies_and_vacancies_count())
 
             result: List[Dict] = []
             for row in cur:
@@ -46,7 +46,6 @@ class DBManager:
             if conn:
                 conn.close()
 
-
     def get_all_vacancies(self) -> List[Dict]:
         """
         Получает список всех вакансий с указанием названия компании, названия вакансии, зарплаты и ссылки на вакансию.
@@ -57,17 +56,7 @@ class DBManager:
             conn = psycopg2.connect(dbname=self.db_name, **self.params)
             cur = conn.cursor()
 
-            cur.execute("""
-                SELECT 
-                    e.employer_name,
-                    v.vacancy_name,
-                    v.salary_from,
-                    v.salary_to,
-                    v.currency,
-                    v.vacancy_url
-                FROM vacancies v
-                JOIN employers e ON v.employer_id = e.employer_id
-            """)
+            cur.execute(get_all_vacancies())
 
             result: List[Dict] = []
             for row in cur:
@@ -100,11 +89,7 @@ class DBManager:
             conn = psycopg2.connect(dbname=self.db_name, **self.params)
             cur = conn.cursor()
 
-            cur.execute("""
-                SELECT AVG(salary_from)
-                FROM vacancies
-                WHERE salary_from IS NOT NULL
-            """)
+            cur.execute(get_avg_salary())
 
             avg_salary: Optional[float] = cur.fetchone()[0]
             return float(avg_salary) if avg_salary is not None else None
@@ -127,18 +112,7 @@ class DBManager:
             conn = psycopg2.connect(dbname=self.db_name, **self.params)
             cur = conn.cursor()
 
-            cur.execute("""
-                SELECT 
-                    e.employer_name,
-                    v.vacancy_name,
-                    v.salary_from,
-                    v.salary_to,
-                    v.currency,
-                    v.vacancy_url
-                FROM vacancies v
-                JOIN employers e ON v.employer_id = e.employer_id
-                WHERE v.salary_from > (SELECT AVG(salary_from) FROM vacancies WHERE salary_from IS NOT NULL)
-            """)
+            cur.execute(get_vacancies_with_higher_salary())
 
             result: List[Dict] = []
             for row in cur:
@@ -170,18 +144,7 @@ class DBManager:
             conn = psycopg2.connect(dbname=self.db_name, **self.params)
             cur = conn.cursor()
 
-            cur.execute(f"""
-                SELECT 
-                    e.employer_name,
-                    v.vacancy_name,
-                    v.salary_from,
-                    v.salary_to,
-                    v.currency,
-                    v.vacancy_url
-                FROM vacancies v
-                JOIN employers e ON v.employer_id = e.employer_id
-                WHERE v.vacancy_name ILIKE %s
-            """, ('%' + keyword + '%',))  # Используем ILIKE для регистронезависимого поиска
+            cur.execute(get_vacancies_with_keyword(), ('%' + keyword + '%',))
 
             result: List[Dict] = []
             for row in cur:
