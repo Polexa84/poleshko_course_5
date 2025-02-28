@@ -1,16 +1,14 @@
 # Импортируем необходимые библиотеки и модули
 import psycopg2
 from typing import Dict, Optional
+
+# Импортируем нужные методы
 from sql_queries import check_db_exists, create_db, create_employers_table, create_vacancies_table
 
 class DatabaseCreator:
-    """
-    Класс для создания базы данных и таблиц в PostgreSQL.
-    """
+    """Класс для создания базы данных и таблиц в PostgreSQL."""
     def __init__(self, db_name: str, params: Dict[str, str]):
-        """
-        Инициализирует экземпляр класса.
-        """
+        """Инициализирует экземпляр класса."""
         self.db_name = db_name
         self.conn: Optional= None # Инициализируем соединение
         self.cur: Optional = None # Инициализируем курсор

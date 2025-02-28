@@ -1,5 +1,8 @@
+# Импортируем необходимые библиотеки и модули
 import psycopg2
 from typing import List, Dict, Optional
+
+# Импортируем нужные методы
 from sql_queries import (
     get_companies_and_vacancies_count,
     get_all_vacancies,
