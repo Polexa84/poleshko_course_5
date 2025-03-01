@@ -6,10 +6,10 @@ from dotenv import load_dotenv
 import psycopg2
 
 # Импортируем нужные классы и методы
-from api_function import HHApi
-from create_db import DatabaseCreator
-from db_manager  import DBManager
-from sql_queries import get_insert_vacancy_query
+from scr.api_function import HHApi
+from scr.create_db import DatabaseCreator
+from scr.db_manager import DBManager
+from scr.sql_queries import get_insert_vacancy_query
 
 # Добавляем список работодателей с их ID
 employer_ids = [
