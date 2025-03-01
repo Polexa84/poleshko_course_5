@@ -84,3 +84,11 @@ def get_vacancies_with_keyword():
         JOIN employers USING(employer_id)
         WHERE vacancy_name ILIKE %s 
     """
+# main.py
+def get_insert_vacancy_query():
+    """Возвращает SQL-запрос для вставки вакансии."""
+    return """
+        INSERT INTO vacancies (vacancy_id, employer_id, vacancy_name, salary_from, salary_to, 
+        currency, vacancy_url, description)
+        VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
+    """
