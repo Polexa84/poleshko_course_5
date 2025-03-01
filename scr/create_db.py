@@ -3,7 +3,7 @@ import psycopg2
 from typing import Dict, Optional
 
 # Импортируем нужные методы
-from sql_queries import check_db_exists, create_db, create_employers_table, create_vacancies_table
+from scr.sql_queries import check_db_exists, create_db, create_employers_table, create_vacancies_table
 
 class DatabaseCreator:
     """Класс для создания базы данных и таблиц в PostgreSQL."""
