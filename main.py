@@ -78,10 +78,15 @@ def fill_vacancies_table(cur, employer_ids, hh_api):
                 vacancy_id = vacancy.get("id")
                 cur.execute("SELECT vacancy_id FROM vacancies WHERE vacancy_id = %s", (vacancy_id,))
                 if not cur.fetchone():
+                    salary_data = vacancy.get("salary")
+                    salary_from = salary_data.get("from") if salary_data else None
+                    salary_to = salary_data.get("to") if salary_data else None
+                    salary_currency = salary_data.get("currency") if salary_data else None
+
                     cur.execute(insert_vacancy_query, (
                         vacancy_id, employer_id, vacancy.get("name"),
-                        vacancy.get("salary", {}).get("from"), vacancy.get("salary", {}).get("to"),
-                        vacancy.get("salary", {}).get("currency"), vacancy.get("alternate_url"),
+                        salary_from, salary_to,
+                        salary_currency, vacancy.get("alternate_url"),
                         vacancy.get("snippet", {}).get("requirement")
                     ))
                     print(f"Добавлена вакансия: {vacancy.get('name')} от {hh_api.get_employer_name(employer_id)}")
